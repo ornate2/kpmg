@@ -1,0 +1,50 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:l="sap.ui.layout" xmlns:m="sap.m" xmlns:f="sap.ui.layout.form" controllerName="kpmg.controller.kpmg" displayBlock="true" xmlns:core="sap.ui.core">
+    <Page id="page" title="Service Component Predictor">
+        <content>
+            <Panel width="auto" expandable="true" expanded="true" id="panel0" class="panel">
+                <headerToolbar>
+                    <Toolbar id="toolbar1">
+                        <Title id="_IDGenTitle1" textAlign="Center" level="H1" class="title"/>
+                    </Toolbar>
+                </headerToolbar>
+                <content>
+                    <Text text="Problem Description" id="txt" textAlign="Center" class="subtitle"/>
+                    <Input id="descriptionInput" class="input"/>
+                </content>
+            </Panel>
+            <Button text="Submit" id="button1" press="onPressPredictButton" class="submitBtn"/>
+        </content>
+        <Panel width="auto" expandable="true" expanded="false" id="panel1" class="panel">
+            <f:Form id="FormToolbar1" editable="true" ariaLabelledBy="Title1" visible="false" class="form">
+                <f:layout>
+                    <f:ResponsiveGridLayout labelSpanXL="4" labelSpanL="3" labelSpanM="4" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="0" emptySpanL="4" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="1" columnsM="1" singleContainerFullSize="false"/>
+                </f:layout>
+                <f:FormContainer ariaLabelledBy="Title4">
+                    <f:formElements>
+                        <f:FormElement label="Error Description">
+                            <f:fields>
+                                <Text id="ErrorDescription" text="{predictionModel>/Error Description}" class="outputText"/>
+                            </f:fields>
+                        </f:FormElement>
+                        <f:FormElement label="Predicted Tasks Used to Complete the Work">
+                            <f:fields>
+                                <Text id="PredictedTasksUsedtoCompletetheWork" text="{predictionModel>/Predicted Tasks Used to Complete the Work}" class="outputText"/>
+                            </f:fields>
+                        </f:FormElement>
+                        <f:FormElement label="Predicted Spare Part Description">
+                            <f:fields>
+                                <Text id="PredictedSparePartDescription" text="{predictionModel>/Predicted Spare Part Description} ({predictionModel>/Predicted Spare Part Used})" class="outputText"/>
+                            </f:fields>
+                        </f:FormElement>
+                        <f:FormElement label="Predicted Quantity Used">
+                            <f:fields>
+                                <Text id="PredictedQuantityUsed" text="{predictionModel>/Predicted Quantity Used}" class="outputText"/>
+                            </f:fields>
+                        </f:FormElement>
+                    </f:formElements>
+                </f:FormContainer>
+            </f:Form>
+        </Panel>
+    </Page>
+</mvc:View>
+ 

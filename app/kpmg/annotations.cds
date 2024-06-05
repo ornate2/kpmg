@@ -1,0 +1,1 @@
+using PredictService as service from '../../srv/ai-service';

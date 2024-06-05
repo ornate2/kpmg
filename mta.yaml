@@ -1,0 +1,142 @@
+_schema-version: "3.1"
+ID: aiusecase
+description: A simple CAP project.
+version: 1.0.0
+modules:
+  - name: aiusecase-srv
+    type: nodejs
+    path: gen/srv
+    requires:
+      - name: aiusecase-db
+      - name: uaa_aiusecase
+      - name: aiusecase-destination-service
+    provides:
+      - name: srv-api
+        properties:
+          srv-url: ${default-url}
+    parameters:
+      buildpack: nodejs_buildpack
+      readiness-health-check-http-endpoint: /health
+      readiness-health-check-type: http
+    build-parameters:
+      builder: npm
+  - name: aiusecase-db-deployer
+    type: hdb
+    path: gen/db
+    requires:
+      - name: aiusecase-db
+    parameters:
+      buildpack: nodejs_buildpack
+  - name: aiusecase-destination-content
+    type: com.sap.application.content
+    requires:
+      - name: aiusecase-destination-service
+        parameters:
+          content-target: true
+      - name: aiusecase_html_repo_host
+        parameters:
+          service-key:
+            name: aiusecase_html_repo_host-key
+      - name: uaa_aiusecase
+        parameters:
+          service-key:
+            name: uaa_aiusecase-key
+    parameters:
+      content:
+        instance:
+          destinations:
+            - Name: ai_kpmg_aiusecase_html_repo_host
+              ServiceInstanceName: aiusecase-html5-app-host-service
+              ServiceKeyName: aiusecase_html_repo_host-key
+              sap.cloud.service: ai_kpmg
+            - Authentication: OAuth2UserTokenExchange
+              Name: ai_kpmg_uaa_aiusecase
+              ServiceInstanceName: aiusecase-xsuaa-service
+              ServiceKeyName: uaa_aiusecase-key
+              sap.cloud.service: ai_kpmg
+          existing_destinations_policy: ignore
+    build-parameters:
+      no-source: true
+  - name: aiusecase-app-content
+    type: com.sap.application.content
+    path: .
+    requires:
+      - name: aiusecase_html_repo_host
+        parameters:
+          content-target: true
+    build-parameters:
+      build-result: resources
+      requires:
+        - artifacts:
+            - kpmg.zip
+          name: kpmg
+          target-path: resources/
+  - name: kpmg
+    type: html5
+    path: app/kpmg
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm install
+        - npm run build:cf
+      supported-platforms:
+        []
+resources:
+  - name: aiusecase-db
+    type: com.sap.xs.hdi-container
+    parameters:
+      service: hana
+      service-plan: hdi-shared
+  - name: aiusecase-destination-service
+    type: org.cloudfoundry.managed-service
+    parameters:
+      config:
+        HTML5Runtime_enabled: true
+        init_data:
+          instance:
+            destinations:
+              - Authentication: NoAuthentication
+                Name: ui5
+                ProxyType: Internet
+                Type: HTTP
+                URL: https://ui5.sap.com
+              - Authentication: NoAuthentication
+                HTML5.DynamicDestination: true
+                HTML5.ForwardAuthToken: true
+                Name: aiusecase-srv-api
+                ProxyType: Internet
+                Type: HTTP
+                URL: ~{srv-api/srv-url}
+            existing_destinations_policy: update
+        version: 1.0.0
+      service: destination
+      service-name: aiusecase-destination-service
+      service-plan: lite
+    requires:
+      - name: srv-api
+  - name: aiusecase_html_repo_host
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-name: aiusecase-html5-app-host-service
+      service-plan: app-host
+  - name: uaa_aiusecase
+    type: org.cloudfoundry.managed-service
+    parameters:
+      path: ./xs-security.json
+      service: xsuaa
+      service-name: aiusecase-xsuaa-service
+      service-plan: application
+      config:
+        xsappname: aiusecase-${org}-${space}
+        tenant-mode: dedicated
+parameters:
+  deploy_mode: html5-repo
+  enable-parallel-deployments: true
+build-parameters:
+  before-all:
+    - builder: custom
+      commands:
+        - npm ci
+        - npx cds build --production
