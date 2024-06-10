@@ -3,37 +3,42 @@ sap.ui.define([
     "sap/ui/model/odata/v2/ODataModel",
     "sap/m/MessageToast",
     "sap/ui/model/json/JSONModel"
-], function (Controller, ODataModel, MessageToast,JSONModel) {
+], function (Controller, ODataModel, MessageToast, JSONModel) {
     "use strict";
  
     return Controller.extend("kpmg.controller.kpmg", {
         onInit: function () {
-           
+            // Initialization logic if needed
         },
         onPressPredictButton: function () {
             var that = this;
             var oView = this.getView();
             var sDescription = oView.byId("descriptionInput").getValue();
-       
+            var sSerialNumber = oView.byId("serialNumberInput").getValue();
+            var sServiceOrderCodes = oView.byId("serviceOrderCodesInput").getValue();
+
             var oModel = oView.getModel();
-            var oBusyDialog = new sap.m.BusyDialog(); // Create a BusyDialog instance
+            var oBusyDialog = new sap.m.BusyDialog();
+            oBusyDialog.open(); 
+
+            var payload = {
+                "description": sDescription,
+                "serialNumber": sSerialNumber,
+                "serviceOrderCodes": sServiceOrderCodes
+            };
        
-            oBusyDialog.open(); // Open the BusyDialog
-       
-            oModel.create("/Predict", {
-                "description": sDescription
-            }, {
+            oModel.create("/Predict", payload, {
                 success: function (data) {
                     console.log(data.description);
                     const parsedData = JSON.parse(data.description);
                     console.log(parsedData);
-                 
                    
-                    // Close the BusyDialog after 5 seconds
                     setTimeout(function () {
                         oBusyDialog.close();
                         var oPredictionModel = new sap.ui.model.json.JSONModel(parsedData);
                         oView.setModel(oPredictionModel, "predictionModel");
+                         console.log("Updated prediction model:", oPredictionModel);
+                         
            
                         var form = that.getView().byId("FormToolbar1");
                         form.setVisible(true);
@@ -44,7 +49,7 @@ sap.ui.define([
                 error: function (error) {
                     MessageToast.show("Error occurred while predicting.");
                     console.error("Error:", error);
-                    oBusyDialog.close(); // Close the BusyDialog in case of error
+                    oBusyDialog.close(); 
                 }
             });
         },
@@ -74,10 +79,5 @@ sap.ui.define([
         onSubmitPress: function(){
             this.onOpenDialog();
         }
-     
-       
-       
- 
     });
 });
- 

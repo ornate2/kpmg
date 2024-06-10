@@ -10,6 +10,12 @@
                 <content>
                     <Text text="Problem Description" id="txt" textAlign="Center" class="subtitle"/>
                     <Input id="descriptionInput" class="input"/>
+                    
+                    <Text text="Equipment Number/Serial Number" id="txtSerialNumber" textAlign="Center" class="subtitle"/>
+                    <Input id="serialNumberInput" class="input"/>
+                    
+                    <Text text="Service Order Error Codes/Activity Numbers" id="txtServiceOrderCodes" textAlign="Center" class="subtitle"/>
+                    <Input id="serviceOrderCodesInput" class="input"/>
                 </content>
             </Panel>
             <Button text="Submit" id="button1" press="onPressPredictButton" class="submitBtn"/>
@@ -47,4 +53,3 @@
         </Panel>
     </Page>
 </mvc:View>
- 

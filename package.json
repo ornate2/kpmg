@@ -35,7 +35,7 @@
                 "kind": "odata",
                 "credentials": {
                     "destination": "Predict_API",
-                    "path": "/v2/inference/deployments/dc04ce0011ad8852/v2"
+                    "path": "v2/inference/deployments/d755fdcc172c9f0e/v2"
                 }
             },
             "db": "hana",
