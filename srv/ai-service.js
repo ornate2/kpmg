@@ -17,7 +17,6 @@ module.exports = cds.service.impl(async function (srv) {
 
             console.log("Sending payload to prediction API:", payload);
 
-
             const predictApi = await cds.connect.to('PredictDest');
 
             const predictResponse = await predictApi.send({
@@ -29,7 +28,16 @@ module.exports = cds.service.impl(async function (srv) {
                     "AI-Resource-Group": "default"
                 }
             });
+
             console.log("Received prediction response:", predictResponse);
+
+            // Transform the response to an array
+            // const transformedResponse = Object.keys(predictResponse).map(key => ({
+            //     instance: key,
+            //     ...predictResponse[key]
+            // }));
+
+            // console.log("Transformed prediction response:", transformedResponse);
 
             return {
                 description: JSON.stringify(predictResponse)

@@ -10,38 +10,47 @@ sap.ui.define([
         onInit: function () {
             // Initialization logic if needed
         },
+
         onPressPredictButton: function () {
             var that = this;
             var oView = this.getView();
             var sDescription = oView.byId("descriptionInput").getValue();
             var sSerialNumber = oView.byId("serialNumberInput").getValue();
             var sServiceOrderCodes = oView.byId("serviceOrderCodesInput").getValue();
-
+        
             var oModel = oView.getModel();
             var oBusyDialog = new sap.m.BusyDialog();
             oBusyDialog.open(); 
-
+        
             var payload = {
                 "description": sDescription,
                 "serialNumber": sSerialNumber,
                 "serviceOrderCodes": sServiceOrderCodes
             };
-       
+        
             oModel.create("/Predict", payload, {
                 success: function (data) {
                     console.log(data.description);
                     const parsedData = JSON.parse(data.description);
                     console.log(parsedData);
                    
+                    const transformedData = Object.keys(parsedData).map(instance => ({
+                        instance: instance,
+                        equipmentNumberSerialNumber: parsedData[instance]['Equipment Number/Serial Number'],
+                        errorDescription: parsedData[instance]['Error Description'],
+                        quantityUsed: parsedData[instance]['Quantity Used'],
+                        serviceOrderErrorCodesActivityNumbers: parsedData[instance]['Service Order Error Codes/Activity Numbers'],
+                        sparePartDescription: parsedData[instance]['Spare Part Description'],
+                        sparePartUsed: parsedData[instance]['Spare Part Used'],
+                        tasksUsed: parsedData[instance]['Tasks Used']
+                    }));
+                   
                     setTimeout(function () {
                         oBusyDialog.close();
-                        var oPredictionModel = new sap.ui.model.json.JSONModel(parsedData);
+                        var oPredictionModel = new sap.ui.model.json.JSONModel({ predictions: transformedData });
                         oView.setModel(oPredictionModel, "predictionModel");
-                         console.log("Updated prediction model:", oPredictionModel);
+                        console.log("Updated prediction model:", oPredictionModel.getData());
                          
-           
-                        var form = that.getView().byId("FormToolbar1");
-                        form.setVisible(true);
                         var panel = that.getView().byId("panel1");
                         panel.setExpanded(!panel.getExpanded());
                     }, 3000);
@@ -53,7 +62,6 @@ sap.ui.define([
                 }
             });
         },
-       
         onOpenDialog: function () {
             if (!this.pDialog) {
                 this.pDialog = this.loadFragment({
