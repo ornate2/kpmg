@@ -43,8 +43,8 @@ sap.ui.define([
             oModel.create("/Predict", payload, {
                 success: function (data) {
                     const parsedData = JSON.parse(data.description);
-                    const transformedData = Object.keys(parsedData).map(instance => ({
-                        instance: instance,
+                    const transformedData = Object.keys(parsedData).map((instance, index) => ({
+                        serialNumber: index + 1,
                         equipmentNumberSerialNumber: parsedData[instance]['Equipment Number/Serial Number'],
                         errorDescription: parsedData[instance]['Error Description'],
                         quantityUsed: parsedData[instance]['Quantity Used'],

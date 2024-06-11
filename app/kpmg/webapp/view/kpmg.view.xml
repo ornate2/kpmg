@@ -25,7 +25,7 @@
                 <Table id="predictionTable" items="{predictionModel>/predictions}">
                     <columns>
                         <Column>
-                            <Text text="Instance" />
+                            <Text text="S.no" />
                         </Column>
                         <Column>
                             <Text text="Equipment Number/Serial Number" />
@@ -52,7 +52,7 @@
                     <items>
                         <ColumnListItem>
                             <cells>
-                                <Text text="{predictionModel>instance}" />
+                                <Text text="{predictionModel>serialNumber}" />
                                 <Text text="{predictionModel>equipmentNumberSerialNumber}" />
                                 <Text text="{predictionModel>errorDescription}" />
                                 <Text text="{predictionModel>quantityUsed}" />

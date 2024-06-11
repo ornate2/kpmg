@@ -21,35 +21,55 @@
             <Button text="Submit" id="button1" press="onPressPredictButton" class="submitBtn"/>
         </content>
         <Panel width="auto" expandable="true" expanded="false" id="panel1" class="panel">
-            <f:Form id="FormToolbar1" editable="true" ariaLabelledBy="Title1" visible="false" class="form">
-                <f:layout>
-                    <f:ResponsiveGridLayout labelSpanXL="4" labelSpanL="3" labelSpanM="4" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="0" emptySpanL="4" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="1" columnsM="1" singleContainerFullSize="false"/>
-                </f:layout>
-                <f:FormContainer ariaLabelledBy="Title4">
-                    <f:formElements>
-                        <f:FormElement label="Error Description">
-                            <f:fields>
-                                <Text id="ErrorDescription" text="{predictionModel>/Error Description}" class="outputText"/>
-                            </f:fields>
-                        </f:FormElement>
-                        <f:FormElement label="Predicted Tasks Used to Complete the Work">
-                            <f:fields>
-                                <Text id="PredictedTasksUsedtoCompletetheWork" text="{predictionModel>/Predicted Tasks Used to Complete the Work}" class="outputText"/>
-                            </f:fields>
-                        </f:FormElement>
-                        <f:FormElement label="Predicted Spare Part Description">
-                            <f:fields>
-                                <Text id="PredictedSparePartDescription" text="{predictionModel>/Predicted Spare Part Description} ({predictionModel>/Predicted Spare Part Used})" class="outputText"/>
-                            </f:fields>
-                        </f:FormElement>
-                        <f:FormElement label="Predicted Quantity Used">
-                            <f:fields>
-                                <Text id="PredictedQuantityUsed" text="{predictionModel>/Predicted Quantity Used}" class="outputText"/>
-                            </f:fields>
-                        </f:FormElement>
-                    </f:formElements>
-                </f:FormContainer>
-            </f:Form>
+            <content>
+                <Table id="predictionTable" items="{predictionModel>/predictions}">
+                    <columns>
+                        <Column>
+                            <Text text="Instance" />
+                        </Column>
+                        <Column>
+                            <Text text="Equipment Number/Serial Number" />
+                        </Column>
+                        <Column>
+                            <Text text="Error Description" />
+                        </Column>
+                        <Column>
+                            <Text text="Quantity Used" />
+                        </Column>
+                        <Column>
+                            <Text text="Service Order Error Codes/Activity Numbers" />
+                        </Column>
+                        <Column>
+                            <Text text="Spare Part Description" />
+                        </Column>
+                        <Column>
+                            <Text text="Spare Part Used" />
+                        </Column>
+                        <Column>
+                            <Text text="Tasks Used" />
+                        </Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem>
+                            <cells>
+                                <Text text="{predictionModel>instance}" />
+                                <Text text="{predictionModel>equipmentNumberSerialNumber}" />
+                                <Text text="{predictionModel>errorDescription}" />
+                                <Text text="{predictionModel>quantityUsed}" />
+                                <Text text="{predictionModel>serviceOrderErrorCodesActivityNumbers}" />
+                                <Text text="{predictionModel>sparePartDescription}" />
+                                <Text text="{predictionModel>sparePartUsed}" />
+                                <Text text="{predictionModel>tasksUsed}" />
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+                <Toolbar>
+                    <Button text="Previous" press="onPreviousPage" enabled="{paginationModel>/canPrevious}" />
+                    <Text text="{paginationModel>/currentPage}" />
+                    <Button text="Next" press="onNextPage" enabled="{paginationModel>/canNext}" />
+                </Toolbar>
+            </content>
         </Panel>
     </Page>
 </mvc:View>
