@@ -1,4 +1,5 @@
 <mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:l="sap.ui.layout" xmlns:m="sap.m" xmlns:f="sap.ui.layout.form" controllerName="kpmg.controller.kpmg" displayBlock="true" xmlns:core="sap.ui.core">
+    <Image src="img/kpmg-logo-1.png" width="100px" height="auto" id="kpmgLogoDifferent" class="kpmgLogo"/>
     <Page id="page" title="Service Component Predictor">
         <content>
             <Panel width="auto" expandable="true" expanded="true" id="panel0" class="panel">

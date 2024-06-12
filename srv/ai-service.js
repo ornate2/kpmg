@@ -31,13 +31,6 @@ module.exports = cds.service.impl(async function (srv) {
 
             console.log("Received prediction response:", predictResponse);
 
-            // Transform the response to an array
-            // const transformedResponse = Object.keys(predictResponse).map(key => ({
-            //     instance: key,
-            //     ...predictResponse[key]
-            // }));
-
-            // console.log("Transformed prediction response:", transformedResponse);
 
             return {
                 description: JSON.stringify(predictResponse)
